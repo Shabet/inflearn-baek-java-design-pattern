@@ -49,7 +49,8 @@ p19_observer
     ├── t01_observer  # java.util.Observable / Observer
     ├── t02_property  # PropertyChangeListener
     ├── t03_flow      # Flow API
-    └── t04_spring    # Spring ApplicationEvent
+    ├── t04_spring    # Spring ApplicationEvent + ApplicationListener
+    └── t05_spring    # Spring POJO 이벤트 + @EventListener
 ```
 
 ## s01_before — 적용 전
@@ -144,6 +145,7 @@ chatServer.sendMessage(user1, "오징어게임", "아.. 이름이 기억났어..
 | Flow API | `t03_flow.FlowInJava`, `FlowInSyncJava` |
 | SAX | 이 패키지에는 없음. XML 파서가 이벤트 콜백으로 요소를 알려 주는 구조 |
 | Spring `ApplicationContext` / `ApplicationEvent` | `t04_spring.ObserverInSpring`, `MyEvent`, `MyEventListener`, `MyRunner` |
+| Spring `@EventListener` (POJO 이벤트, 4.2+) | `t05_spring.ObserverInSpring`, `MyEvent`, `MyEventListener`, `MyRunner` |
 
 ### Java — `t01_observer.ObserverInJava`
 
@@ -164,10 +166,21 @@ Java 9 `java.util.concurrent.Flow`(Reactive Streams). `SubmissionPublisher`가 P
 `ObserverInSpring`이 비웹(`WebApplicationType.NONE`)으로 기동합니다.
 
 - **Publisher**: `MyRunner`가 `ApplicationEventPublisher.publishEvent(...)`로 이벤트를 발행합니다.
-- **Event**: `MyEvent`는 `ApplicationEvent`를 상속한 메시지 페이로드입니다. Spring 4.2부터는 `ApplicationEvent`를 상속하지 않은 POJO도 `@EventListener`로 받을 수 있습니다.
+- **Event**: `MyEvent`는 `ApplicationEvent`를 상속한 메시지 페이로드입니다. `source`와 `message`를 함께 실어 보냅니다.
 - **Subscriber**: `MyEventListener`가 `ApplicationListener<MyEvent>`를 구현하고 `onApplicationEvent`에서 처리합니다. `@Component`로 등록되면 스프링 컨테이너가 등록·해제를 맡습니다.
 
 실행: `s03_java.t04_spring.ObserverInSpring`
+
+### Spring — `t05_spring` POJO 이벤트 + `@EventListener`
+
+기동 방식과 발행 경로는 `t04_spring`과 같습니다. 이벤트·구독자 쪽만 바뀝니다.
+
+- **Event**: `MyEvent`는 `ApplicationEvent`를 상속하지 않은 POJO입니다. Spring 4.2부터는 이런 타입도 `publishEvent`로 보낼 수 있습니다.
+- **Subscriber**: `ApplicationListener`를 구현하지 않고, `@EventListener(MyEvent.class)`가 붙은 메서드가 구독합니다.
+
+인터페이스 구현 없이 어노테이션만으로 옵저버를 붙일 수 있다는 점이 `t04_spring`과의 차이입니다.
+
+실행: `s03_java.t05_spring.ObserverInSpring`
 
 ## 실행
 
@@ -185,4 +198,5 @@ Java 9 `java.util.concurrent.Flow`(Reactive Streams). `SubmissionPublisher`가 P
 | Java PCL | `...s03_java.t02_property.PropertyChangeExample` |
 | Java Flow (비동기) | `...s03_java.t03_flow.FlowInJava` |
 | Java Flow (동기) | `...s03_java.t03_flow.FlowInSyncJava` |
-| Spring Event | `...s03_java.t04_spring.ObserverInSpring` |
+| Spring Event (`ApplicationListener`) | `...s03_java.t04_spring.ObserverInSpring` |
+| Spring Event (`@EventListener`) | `...s03_java.t05_spring.ObserverInSpring` |
