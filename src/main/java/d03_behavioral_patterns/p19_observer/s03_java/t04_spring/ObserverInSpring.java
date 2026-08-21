@@ -1,4 +1,4 @@
-package d03_behavioral_patterns.p19_observer.s03_java;
+package d03_behavioral_patterns.p19_observer.s03_java.t04_spring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;

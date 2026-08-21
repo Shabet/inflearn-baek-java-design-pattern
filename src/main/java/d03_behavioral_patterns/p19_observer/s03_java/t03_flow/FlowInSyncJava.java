@@ -1,7 +1,6 @@
-package d03_behavioral_patterns.p19_observer.s03_java;
+package d03_behavioral_patterns.p19_observer.s03_java.t03_flow;
 
 import java.util.concurrent.Flow;
-import java.util.concurrent.SubmissionPublisher;
 
 public class FlowInSyncJava {
 

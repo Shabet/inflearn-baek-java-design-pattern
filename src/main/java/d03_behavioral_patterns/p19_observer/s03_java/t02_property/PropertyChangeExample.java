@@ -1,4 +1,4 @@
-package d03_behavioral_patterns.p19_observer.s03_java;
+package d03_behavioral_patterns.p19_observer.s03_java.t02_property;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

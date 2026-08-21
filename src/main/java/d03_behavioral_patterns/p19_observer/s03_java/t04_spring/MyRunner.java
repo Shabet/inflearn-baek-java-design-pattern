@@ -1,4 +1,4 @@
-package d03_behavioral_patterns.p19_observer.s03_java;
+package d03_behavioral_patterns.p19_observer.s03_java.t04_spring;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -16,6 +16,6 @@ public class MyRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        publisher.publishEvent(new MyEvent("hello spring event"));
+        publisher.publishEvent(new MyEvent(this, "hello spring event"));
     }
 }

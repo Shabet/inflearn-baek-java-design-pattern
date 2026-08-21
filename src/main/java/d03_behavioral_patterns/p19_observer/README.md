@@ -46,6 +46,10 @@ p19_observer
 ├── s01_before   # 패턴 적용 전: 메시지를 직접 조회(폴링)
 ├── s02_after    # 패턴 적용 후: 주제별 구독 후 푸시 알림
 └── s03_java     # Java · Spring에서 찾아보는 옵저버
+    ├── t01_observer  # java.util.Observable / Observer
+    ├── t02_property  # PropertyChangeListener
+    ├── t03_flow      # Flow API
+    └── t04_spring    # Spring ApplicationEvent
 ```
 
 ## s01_before — 적용 전
@@ -135,33 +139,35 @@ chatServer.sendMessage(user1, "오징어게임", "아.. 이름이 기억났어..
 
 | 슬라이드 | 예제 |
 | --- | --- |
-| `Observable` / `Observer` (Java 9부터 deprecated) | `ObserverInJava` |
-| `PropertyChangeListener`, `PropertyChangeEvent` | `PropertyChangeExample` |
-| Flow API | `FlowInJava` |
+| `Observable` / `Observer` (Java 9부터 deprecated) | `t01_observer.ObserverInJava` |
+| `PropertyChangeListener`, `PropertyChangeEvent` | `t02_property.PropertyChangeExample` |
+| Flow API | `t03_flow.FlowInJava`, `FlowInSyncJava` |
 | SAX | 이 패키지에는 없음. XML 파서가 이벤트 콜백으로 요소를 알려 주는 구조 |
-| Spring `ApplicationContext` / `ApplicationEvent` | `ObserverInSpring`, `MyEvent`, `MyEventListener`, `MyRunner` |
+| Spring `ApplicationContext` / `ApplicationEvent` | `t04_spring.ObserverInSpring`, `MyEvent`, `MyEventListener`, `MyRunner` |
 
-### Java — `ObserverInJava`
+### Java — `t01_observer.ObserverInJava`
 
 `java.util.Observable`이 Subject, `java.util.Observer`가 구독자입니다. `setChanged()` 후 `notifyObservers(message)`로 알립니다. Java 9부터 deprecated라 신규 코드에는 쓰지 않는 것이 맞습니다.
 
-### Java — `PropertyChangeExample`
+### Java — `t02_property.PropertyChangeExample`
 
 JavaBeans `PropertyChangeSupport`가 옵저버 목록을 대신 관리합니다. `firePropertyChange`로 알리고, `removeObserver` 이후 메시지는 구독자에게 가지 않습니다.
 
-### Java — `FlowInJava`
+### Java — `t03_flow.FlowInJava`
 
 Java 9 `java.util.concurrent.Flow`(Reactive Streams). `SubmissionPublisher`가 Publisher, `Flow.Subscriber`가 구독자입니다. `submit`은 다른 스레드에서 `onNext`를 호출할 수 있어 `"이게 먼저 출력될 수도 있습니다."`가 `hello java`보다 먼저 나올 수 있습니다.
 
-### Spring — 애플리케이션 이벤트
+같은 패키지의 `FlowInSyncJava`는 Publisher를 직접 구현해 `subscribe` 안에서 `onNext` / `onComplete`를 **같은 스레드에서** 호출합니다. 그래서 `"위의 처리가 다 끝나야지 출력됩니다."`는 구독자 콜백이 끝난 뒤에 나옵니다.
+
+### Spring — `t04_spring` 애플리케이션 이벤트
 
 `ObserverInSpring`이 비웹(`WebApplicationType.NONE`)으로 기동합니다.
 
 - **Publisher**: `MyRunner`가 `ApplicationEventPublisher.publishEvent(...)`로 이벤트를 발행합니다.
-- **Event**: `MyEvent`는 메시지 페이로드입니다. Spring 4.2부터는 `ApplicationEvent`를 상속하지 않은 POJO도 `@EventListener`로 받을 수 있습니다.
-- **Subscriber**: `MyEventListener`의 `@EventListener(MyEvent.class)`가 구독입니다. 스프링 컨테이너가 등록·해제를 맡습니다.
+- **Event**: `MyEvent`는 `ApplicationEvent`를 상속한 메시지 페이로드입니다. Spring 4.2부터는 `ApplicationEvent`를 상속하지 않은 POJO도 `@EventListener`로 받을 수 있습니다.
+- **Subscriber**: `MyEventListener`가 `ApplicationListener<MyEvent>`를 구현하고 `onApplicationEvent`에서 처리합니다. `@Component`로 등록되면 스프링 컨테이너가 등록·해제를 맡습니다.
 
-실행: `s03_java.ObserverInSpring`
+실행: `s03_java.t04_spring.ObserverInSpring`
 
 ## 실행
 
@@ -175,7 +181,8 @@ Java 9 `java.util.concurrent.Flow`(Reactive Streams). `SubmissionPublisher`가 P
 | --- | --- |
 | 적용 전 | `d03_behavioral_patterns.p19_observer.s01_before.Client` |
 | 적용 후 | `d03_behavioral_patterns.p19_observer.s02_after.Client` |
-| Java Observable | `...s03_java.ObserverInJava` |
-| Java PCL | `...s03_java.PropertyChangeExample` |
-| Java Flow | `...s03_java.FlowInJava` |
-| Spring Event | `...s03_java.ObserverInSpring` |
+| Java Observable | `...s03_java.t01_observer.ObserverInJava` |
+| Java PCL | `...s03_java.t02_property.PropertyChangeExample` |
+| Java Flow (비동기) | `...s03_java.t03_flow.FlowInJava` |
+| Java Flow (동기) | `...s03_java.t03_flow.FlowInSyncJava` |
+| Spring Event | `...s03_java.t04_spring.ObserverInSpring` |

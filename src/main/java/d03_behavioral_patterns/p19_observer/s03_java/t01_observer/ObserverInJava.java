@@ -1,4 +1,4 @@
-package d03_behavioral_patterns.p19_observer.s03_java;
+package d03_behavioral_patterns.p19_observer.s03_java.t01_observer;
 
 import java.util.Observable;
 import java.util.Observer;

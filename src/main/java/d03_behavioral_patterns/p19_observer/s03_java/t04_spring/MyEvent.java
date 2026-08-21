@@ -1,12 +1,13 @@
-package d03_behavioral_patterns.p19_observer.s03_java;
+package d03_behavioral_patterns.p19_observer.s03_java.t04_spring;
 
 import org.springframework.context.ApplicationEvent;
 
-public class MyEvent {
+public class MyEvent extends ApplicationEvent{
 
     private String message;
 
-    public MyEvent(String message) {
+    public MyEvent(Object source, String message) {
+        super(source);
         this.message = message;
     }
 
