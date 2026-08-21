@@ -1,0 +1,11 @@
+package d03_behavioral_patterns.p17_mediator.s02_after;
+
+public class CleaningService {
+
+    private FrontDesk frontDesk = new FrontDesk();
+
+    public void getTowers(Integer guestId, int numberOfTowers) {
+        String roomNumber = this.frontDesk.getRoomNumberFor(guestId);
+        System.out.println("provide " + numberOfTowers + " to " + roomNumber);
+    }
+}
